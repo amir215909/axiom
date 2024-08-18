@@ -22,3 +22,8 @@ poweron() {
     instance_name="$1"
     hcloud server poweron $(instance_id $instance_name)
 }
+
+poweroff() {
+	instance_name="$1"
+    hcloud server shutdown $(instance_id $instance_name)
+}
