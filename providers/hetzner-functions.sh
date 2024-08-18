@@ -63,3 +63,8 @@ delete_instance() {
   	id="$(instance_id "$name")"
     hcloud server delete "$id"
 }
+
+# TBD
+instance_exists() {
+	instance="$1"
+}
