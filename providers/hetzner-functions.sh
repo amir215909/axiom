@@ -32,3 +32,7 @@ reboot(){
     instance_name="$1"
     hcloud server reboot $(instance_id $instance_name)
 }
+
+instance_list() {
+	instances | jq -r '.[].name'
+}
