@@ -72,3 +72,7 @@ instance_exists() {
 list_regions() {
     hcloud location list
 }
+
+regions() {
+    hcloud location list -o json | jq -r '.[].name'
+}
