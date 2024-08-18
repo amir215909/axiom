@@ -27,3 +27,8 @@ poweroff() {
 	instance_name="$1"
     hcloud server shutdown $(instance_id $instance_name)
 }
+
+reboot(){
+    instance_name="$1"
+    hcloud server reboot $(instance_id $instance_name)
+}
