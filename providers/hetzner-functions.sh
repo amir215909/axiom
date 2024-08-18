@@ -68,3 +68,7 @@ delete_instance() {
 instance_exists() {
 	instance="$1"
 }
+
+list_regions() {
+    hcloud location list
+}
