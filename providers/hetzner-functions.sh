@@ -17,3 +17,8 @@ instance_ip() {
 	name="$1"
 	instances | jq ".[] | select(.name ==\"$name\") | .public_net.ipv4.ip"
 }
+
+poweron() {
+    instance_name="$1"
+    hcloud server poweron $(instance_id $instance_name)
+}
