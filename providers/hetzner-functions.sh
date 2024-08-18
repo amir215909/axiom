@@ -40,3 +40,9 @@ instance_list() {
 instance_menu() {
 	instances | jq -r '.[].name' | fzf
 }
+
+quick_ip() {
+	data="$1"
+	ip=$(echo $data | jq -r ".[] | select(.name == \"$name\") | .public_net.ipv4.ip")
+	echo $ip
+}
