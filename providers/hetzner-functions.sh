@@ -57,3 +57,9 @@ get_image_id() {
 	id=$(echo $images |  jq -r ".[] | select((.name==\"$query\") and (.architecture==\"x86\")) | .id")
 	echo $id
 }
+
+delete_instance() {
+    name="$1"
+  	id="$(instance_id "$name")"
+    hcloud server delete "$id"
+}
