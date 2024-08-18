@@ -36,3 +36,7 @@ reboot(){
 instance_list() {
 	instances | jq -r '.[].name'
 }
+
+instance_menu() {
+	instances | jq -r '.[].name' | fzf
+}
