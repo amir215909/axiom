@@ -50,3 +50,10 @@ quick_ip() {
 selected_instance() {
 	cat "$AXIOM_PATH/selected.conf"
 }
+
+get_image_id() {
+	query="$1"
+	images=$(hcloud image list -o json)
+	id=$(echo $images |  jq -r ".[] | select((.name==\"$query\") and (.architecture==\"x86\")) | .id")
+	echo $id
+}
