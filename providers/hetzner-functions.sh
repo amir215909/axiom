@@ -46,3 +46,7 @@ quick_ip() {
 	ip=$(echo $data | jq -r ".[] | select(.name == \"$name\") | .public_net.ipv4.ip")
 	echo $ip
 }
+
+selected_instance() {
+	cat "$AXIOM_PATH/selected.conf"
+}
