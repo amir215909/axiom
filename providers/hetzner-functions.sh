@@ -134,6 +134,12 @@ delete_record_force() {
     #doctl compute domain records delete $domain $id -f
 }
 
+# Delete a snapshot by its name
+delete_snapshot() {
+	name="$1"
+	hcloud server delete "$name"
+}
+
 add_dns_record() {
     subdomain="$1"
     domain="$2"
