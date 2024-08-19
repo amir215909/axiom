@@ -76,3 +76,34 @@ list_regions() {
 regions() {
     hcloud location list -o json | jq -r '.[].name'
 }
+
+instance_sizes() {
+	echo "Needs conversion"
+    #doctl compute size list -o json
+}
+
+# List DNS records for domain
+list_dns() {
+	domain="$1"
+
+	echo "Needs conversion"
+	# doctl compute domain records list "$domain"
+}
+
+list_domains_json() {
+    echo "Needs conversion"
+    # doctl compute domain list -o json
+}
+
+# List domains
+list_domains() {
+	echo "Needs conversion"
+	# doctl compute domain list
+}
+
+list_subdomains() {
+    domain="$1"
+
+	echo "Needs conversion"
+    # doctl compute domain records list $domain -o json | jq '.[]'
+}
