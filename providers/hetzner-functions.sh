@@ -107,3 +107,8 @@ list_subdomains() {
 	echo "Needs conversion"
     # doctl compute domain records list $domain -o json | jq '.[]'
 }
+
+# get JSON data for snapshots
+snapshots() {
+	hcloud image list -o json
+}
