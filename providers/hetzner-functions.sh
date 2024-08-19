@@ -235,3 +235,53 @@ query_instances_cache() {
 	selected=$(echo "$selected" | tr ' ' '\n' | sort -u)
 	echo -n $selected
 }
+
+#  generate the SSH config depending on the key:value of generate_sshconfig in accout.json
+#
+generate_sshconfig() {
+accounts=$(ls -l "$AXIOM_PATH/accounts/" | grep "json" | grep -v 'total ' | awk '{ print $9 }' | sed 's/\.json//g')
+current=$(ls -lh "$AXIOM_PATH/axiom.json" | awk '{ print $11 }' | tr '/' '\n' | grep json | sed 's/\.json//g') > /dev/null 2>&1
+droplets="$(instances)"
+sshnew="$AXIOM_PATH/.sshconfig.new$RANDOM"
+echo -n "" > $sshnew
+echo -e "\tServerAliveInterval 60\n" >> $sshnew
+sshkey="$(cat "$AXIOM_PATH/axiom.json" | jq -r '.sshkey')"
+echo -e "IdentityFile $HOME/.ssh/$sshkey" >> $sshnew
+generate_sshconfig="$(cat "$AXIOM_PATH/axiom.json" | jq -r '.generate_sshconfig')"
+
+if [[ "$generate_sshconfig" == "private" ]]; then
+
+ echo -e "Warning your SSH config generation toggle is set to 'Private' for account : $(echo $current)."
+ echo -e "axiom will always attempt to SSH into the instances from their private backend network interface. To revert run: axiom-ssh --just-generate"
+ for name in $(echo "$droplets" | jq -r '.[].name')
+ do
+ ip=$(echo "$droplets" | jq -r ".[] | select(.name==\"$name\") | .private_net.ipv4.ip")
+ if [[ -n "$ip" ]]; then
+  echo -e "Host $name\n\tHostName $ip\n\tUser op\n\tPort 2266\n" >> $sshnew
+ fi
+ done
+ mv $sshnew $AXIOM_PATH/.sshconfig
+
+ elif [[ "$generate_sshconfig" == "cache" ]]; then
+ echo -e "Warning your SSH config generation toggle is set to 'Cache' for account : $(echo $current)."
+ echo -e "axiom will never attempt to regenerate the SSH config. To revert run: axiom-ssh --just-generate"
+
+ # If anything but "private" or "cache" is parsed from the generate_sshconfig in account.json, generate public IPs only
+ #
+ else
+ for name in $(echo "$droplets" | jq -r '.[].name')
+ do
+ ip=$(echo "$droplets" | jq -r ".[] | .public_net.ipv4.ip")
+ if [[ -n "$ip" ]]; then
+  echo -e "Host $name\n\tHostName $ip\n\tUser op\n\tPort 2266\n" >> $sshnew
+ fi
+ done
+ mv $sshnew $AXIOM_PATH/.sshconfig
+fi
+
+
+ if [ "$key" != "null" ]
+ then
+ gen_app_sshconfig
+ fi
+}
