@@ -112,3 +112,8 @@ list_subdomains() {
 snapshots() {
 	hcloud image list -o json
 }
+
+get_snapshots()
+{
+	hcloud image list 
+}
