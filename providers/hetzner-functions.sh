@@ -149,3 +149,17 @@ add_dns_record() {
     # doctl compute domain records create $domain --record-type A --record-name $subdomain --record-data $ip
 }
  
+ msg_success() {
+	echo -e "${BGreen}$1${Color_Off}"
+	echo "SUCCESS $(date):$1" >> $LOG
+}
+
+msg_error() {
+	echo -e "${BRed}$1${Color_Off}"
+	echo "ERROR $(date):$1" >> $LOG
+}
+
+msg_neutral() {
+	echo -e "${Blue}$1${Color_Off}"
+	echo "INFO $(date): $1" >> $LOG
+}
