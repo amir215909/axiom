@@ -285,3 +285,8 @@ fi
  gen_app_sshconfig
  fi
 }
+
+image_id() {
+	name="$1"
+	snapshots | jq -r ".[] | select(.name==\"$name\") | .id"
+}
