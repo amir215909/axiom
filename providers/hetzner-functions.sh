@@ -117,3 +117,29 @@ get_snapshots()
 {
 	hcloud image list 
 }
+
+delete_record() {
+    domain="$1"
+    id="$2"
+
+	echo "Needs conversion"
+    #doctl compute domain records delete $domain $id
+}
+
+delete_record_force() {
+    domain="$1"
+    id="$2"
+
+	echo "Needs conversion"
+    #doctl compute domain records delete $domain $id -f
+}
+
+add_dns_record() {
+    subdomain="$1"
+    domain="$2"
+    ip="$3"
+
+	echo "Needs conversion"
+    # doctl compute domain records create $domain --record-type A --record-name $subdomain --record-data $ip
+}
+ 
