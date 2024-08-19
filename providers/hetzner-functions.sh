@@ -163,3 +163,40 @@ msg_neutral() {
 	echo -e "${Blue}$1${Color_Off}"
 	echo "INFO $(date): $1" >> $LOG
 }
+
+# takes any number of arguments, each argument should be an instance or a glob, say 'omnom*', returns a sorted list of instances based on query
+# $ query_instances 'john*' marin39
+# Resp >>  john01 john02 john03 john04 nmarin39
+query_instances() {
+	droplets="$(instances)"
+	selected=""
+
+	for var in "$@"; do
+		if [[ "$var" =~ "*" ]]
+		then
+			var=$(echo "$var" | sed 's/*/.*/g')
+			selected="$selected $(echo $droplets | jq -r '.[].name' | grep "$var")"
+		else
+			if [[ $query ]];
+			then
+				query="$query\|$var"
+			else
+				query="$var"
+			fi
+		fi
+	done
+
+	if [[ "$query" ]]
+	then
+		selected="$selected $(echo $droplets | jq -r '.[].name' | grep -w "$query")"
+	else
+		if [[ ! "$selected" ]]
+		then
+			echo -e "${Red}No instance supplied, use * if you want to delete all instances...${Color_Off}"
+			exit
+		fi
+	fi
+
+	selected=$(echo "$selected" | tr ' ' '\n' | sort -u)
+	echo -n $selected
+}
