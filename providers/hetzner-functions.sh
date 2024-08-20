@@ -290,3 +290,19 @@ image_id() {
 	name="$1"
 	snapshots | jq -r ".[] | select(.name==\"$name\") | .id"
 }
+
+create_instance() {
+	name="$1"
+	image_id="$2"
+	size_slug="$3"
+	region="$4"
+	boot_script="$5"
+
+  sshkey="$(cat "$AXIOM_PATH/axiom.json" | jq -r '.sshkey')"
+  sshkey_fingerprint="$(ssh-keygen -l -E md5 -f ~/.ssh/$sshkey.pub | awk '{print $2}' | cut -d : -f 2-)"
+  keyid=$(hcloud ssh-key create --name $sshkey \
+    --public-key-from-file ~/.ssh/$sshkey.pub 2>/dev/null) ||
+  keyid=$(hcloud ssh-key list | grep "$sshkey_fingerprint" | awk '{ print $1 }')
+
+	hcloud server create  --type "$size_slug" --location "$region" --image "$image_id" --name "$name" --ssh-key "$keyid" --user-data-from-file "$boot_script" 2>&1 >> /dev/null
+}
