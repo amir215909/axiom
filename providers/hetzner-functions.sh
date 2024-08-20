@@ -342,3 +342,14 @@ lsplit() {
 	cd $orig_pwd
 	echo -n $split_dir
 }
+
+# Check if host is in .sshconfig, and if it's not, regenerate sshconfig
+conf_check() {
+	instance="$1"
+
+	l="$(cat "$AXIOM_PATH/.sshconfig" | grep "$instance" | wc -l | awk '{ print $1 }')"
+
+	if [[ $l -lt 1 ]]; then
+		generate_sshconfig	
+	fi
+}
