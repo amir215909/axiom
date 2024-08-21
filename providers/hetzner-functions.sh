@@ -54,7 +54,11 @@ selected_instance() {
 get_image_id() {
 	query="$1"
 	images=$(hcloud image list -o json)
-	id=$(echo $images |  jq -r ".[] | select((.name==\"$query\") and (.architecture==\"x86\")) | .id")
+	if [[ $query == *"axiom-"* ]]; then
+   		id=$(echo $images |  jq -r ".[] | select((.description==\"$query\") and (.architecture==\"x86\")) | .id")
+	else
+    	id=$(echo $images |  jq -r ".[] | select((.name==\"$query\") and (.architecture==\"x86\")) | .id")
+	fi
 	echo $id
 }
 
@@ -110,12 +114,12 @@ list_subdomains() {
 
 # get JSON data for snapshots
 snapshots() {
-	hcloud image list -o json
+	hcloud image list -t snapshot -o json
 }
 
 get_snapshots()
 {
-	hcloud image list 
+	hcloud image list -t snapshot
 }
 
 delete_record() {
