@@ -2,10 +2,10 @@
   "builders": [
     {
       "type": "hcloud",
-      "hcloud_token": "{{user `do_token`}}",
-      "image": "{{user `default_image`}}",
+      "image": "ubuntu-24.04",
       "server_type": "{{user `default_size`}}",
       "location": "{{user `region`}}",
+      "token": "{{user `do_key`}}",
       "ssh_username": "root",
       "rescue": "linux64",
       "snapshot_name": "{{ user `snapshot_name` }}",
