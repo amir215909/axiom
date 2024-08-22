@@ -7,7 +7,6 @@
       "location": "{{user `region`}}",
       "token": "{{user `do_key`}}",
       "ssh_username": "root",
-      "rescue": "linux64",
       "snapshot_name": "{{ user `snapshot_name` }}",
       "snapshot_labels": {
         "packer.io/version": "{{ packer_version }}",
