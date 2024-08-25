@@ -293,7 +293,7 @@ if [[ "$generate_sshconfig" == "private" ]]; then
  else
  for name in $(echo "$droplets" | jq -r '.[].name')
  do
- ip=$(echo "$droplets" | jq -r ".[] | .public_net.ipv4.ip")
+ ip=$(echo "$droplets" | jq -r ".[] | select(.name==\"$name\") | .public_net.ipv4.ip")
  if [[ -n "$ip" ]]; then
   echo -e "Host $name\n\tHostName $ip\n\tUser op\n\tPort 2266\n" >> $sshnew
  fi
