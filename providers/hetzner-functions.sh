@@ -47,6 +47,24 @@ quick_ip() {
 	echo $ip
 }
 
+instance_pretty() {
+  data=$(instances)
+  #number of servers
+  servers=$(echo $data|jq -r '.[]|.id'|wc -l )
+  #default size from config file
+  type="$(jq -r .default_size "$AXIOM_PATH/axiom.json")"
+  #monthly price of server type 
+price=$(hcloud server-type list -o json | jq -r ".[] | select(.name == \"$type\") | .prices[0].price_monthly.net")
+  totalPrice=$(echo "$price * $servers" | bc)
+  header="Instance,Primary Ip,Region,Memory,Status,\$/M"
+  totals="_,_,_,Instances,$servers,Total,\$$totalPrice"
+fields=".[] | [.name, .public_net.ipv4.ip, .datacenter.location.name, .server_type.memory, .status, \"$price\"] | @csv"
+
+# Printing part
+# sort -k1 sorts all data by label/instance/server name
+(echo "$header" && echo "$data" | jq -r "$fields" | sort -k1 && echo "$totals") | sed 's/"//g' | column -t -s, | perl -pe '$_ = "\033[0;37m$_\033[0;34m" if($. % 2)'
+}
+
 selected_instance() {
 	cat "$AXIOM_PATH/selected.conf"
 }
